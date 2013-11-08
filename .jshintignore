@@ -1,0 +1,6 @@
+*.md
+*.xml
+*.log
+*.sublime*
+node_modules/
+package.json
