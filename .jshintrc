@@ -8,13 +8,7 @@
         "before",
         "after",
         "it",
-        "should",
-        "expect",
-        "sinon",
-        "sandbox",
-        "Backbone",
-        "_",
-        "App"
+        "expect"
     ],
 
     "node"          : true,
