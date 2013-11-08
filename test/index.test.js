@@ -1,14 +1,13 @@
 'use strict';
 
+global.expect = require('chai').expect;
+
 describe('ValidityState Shim', function () {
 
     // Only want to run these tests in IE9
     // These pass in Safari and Chrome
     // But Validitystate implementation is different
     // in FF causing these tests to break
-    if (document.createElement('input').validity) {
-        return;
-    }
 
     var telRegExp = new RegExp(/^\+*\d+[\d ]+$/),
 
@@ -41,7 +40,7 @@ describe('ValidityState Shim', function () {
             '<textarea required></textarea>' +
         '</div>');
 
-    require('../../../public/js/validitystate-shim');
+    require('../index.js');
 
     before(function () {
         $('#test-body').append($el);
