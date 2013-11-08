@@ -1,7 +1,7 @@
 ValdityState shim for IE8 and IE9
 =================================
 
-Adds native-like support for ValidityState in IE8 and IE9 browsers
+Adds Chrome-like support for HTML5 validation in IE8 and IE9 browsers
 
-Execute <pre>input.validity.valid</pre> or <pre>input.checkValidity()</pre>  to
-retrieve the validity state accurate to the HTML5 spec.
+Read <pre>input.validity.valid</pre> or execute <pre>input.checkValidity()</pre>
+to get the validity state accurate to the HTML5 spec.
