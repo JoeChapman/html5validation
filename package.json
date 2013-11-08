@@ -1,0 +1,24 @@
+{
+    "name": "validutystate-shim",
+    "version": "0.0.1",
+    "description": "IE shim for HTML5 ValidityState",
+    "main": "index.js",
+    "scripts": {
+        "test": "./node_modules/mocha/bin/mocha start",
+        "lint": "[ -z \"$LINTFILES\" ] && LINTFILES='**'; ./node_modules/jshint/bin/jshint ${LINTFILES}"
+    },
+    "repository": {
+        "type": "git",
+        "url": "github:JoeChapman/validitystate-shim"
+    },
+    "author": "JoeChapman",
+    "license": "MIT",
+    "readmeFilename": "README.md",
+    "devDependencies": {
+        "mocha": "1.13.0",
+        "chai": "1.7.2",
+        "sinon": "1.7.3",
+        "sinon-chai": "2.4.0",
+        "jshint": "2.1.10"
+    }
+}
