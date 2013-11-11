@@ -1,4 +1,4 @@
-HTML5 Validation
+HTML5 Validation [![Build Status](https://travis-ci.org/JoeChapman/html5validation.png)](https://travis-ci.org/JoeChapman/html5validation)
 ================
 
 Adds Chrome-like support for HTML5 validation in IE8 and IE9 browsers
