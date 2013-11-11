@@ -2,7 +2,7 @@
 
 global.expect = require('chai').expect;
 
-describe('ValidityState Shim', function () {
+describe('HTML5 Validation', function () {
 
     // Only want to run these tests in IE9
     // These pass in Safari and Chrome

@@ -1,5 +1,5 @@
 {
-    "name": "validitystate-shim",
+    "name": "html5validation",
     "version": "0.0.1",
     "description": "IE shim for HTML5 ValidityState",
     "main": "index.js",
@@ -9,7 +9,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "github:JoeChapman/validitystate-shim"
+        "url": "github:JoeChapman/html5validation"
     },
     "author": "JoeChapman",
     "email": "info@josephchapman.com",

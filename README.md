@@ -1,5 +1,5 @@
-ValdityState shim for IE8 and IE9
-=================================
+HTML5 Validation
+================
 
 Adds Chrome-like support for HTML5 validation in IE8 and IE9 browsers
 
