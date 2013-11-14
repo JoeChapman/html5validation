@@ -21,6 +21,7 @@
         "mocha": "1.13.0",
         "chai": "1.7.2",
         "chai-jquery": "1.1.2",
+        "sinon": "1.7.3",
         "karma": "~0.10",
         "karma-mocha": "~0.1",
         "karma-chrome-launcher": "~0.1",

@@ -9,11 +9,17 @@ var emailRegExp = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]
 // http://regexlib.com/REDetails.aspx?regexp_id=1854
 var urlRegExp = /(http(?:s)?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(?:\/?|(?:\/[\w\-]+)*)(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)$/;
 
-(function () {
+module.exports = (function () {
 
     if (document.createElement('input').validity) {
         return;
     }
+
+    var constructors = [
+        HTMLInputElement,
+        HTMLSelectElement,
+        HTMLTextAreaElement
+    ];
 
     var validityRoutines = {
 
@@ -25,13 +31,12 @@ var urlRegExp = /(http(?:s)?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{
             return false;
         },
 
-        typeMismatch: function ($input, value) {
+        typeMismatch: function (input, value) {
             var mismatch = false;
-
-            if (validityRoutines.valueMissing($input, value) === true) {
+            if (validityRoutines.valueMissing(input, value) === true) {
                 return mismatch;
             }
-            switch ($input.attr('type')) {
+            switch (input.getAttribute('type')) {
             case 'number':
                 mismatch = !numberRegExp.test(Number(value));
                 break;
@@ -42,100 +47,115 @@ var urlRegExp = /(http(?:s)?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{
                 mismatch = !emailRegExp.test(value);
                 break;
             }
-
             return mismatch;
         },
 
-        rangeUnderflow: function ($input, value) {
-            return Number(value) < Number($input.attr('min'));
+        rangeUnderflow: function (input, value) {
+            return !!input.getAttribute('min') && Number(value) < Number(input.getAttribute('min'));
         },
 
-        rangeOverflow: function ($input, value) {
-            return Number(value) > Number($input.attr('max'));
+        rangeOverflow: function (input, value) {
+            return !!input.getAttribute('max') && Number(value) > Number(input.getAttribute('max'));
         },
 
-        stepMismatch: function ($input, value) {
-            return !!$input.attr('step') && (value % Number($input.attr('step')) !== 0);
+        stepMismatch: function (input, value) {
+            return !!input.getAttribute('step') && (value % Number(input.getAttribute('step')) !== 0);
         },
 
-        tooLong: function ($input, value) {
-            return value.length > Number($input.attr('maxlength'));
+        tooLong: function (input, value) {
+            return !!input.getAttribute('maxlength') && value.length > Number(input.getAttribute('maxlength'));
         },
 
-        patternMismatch: function ($input, value) {
-            var pattern = new RegExp($input.attr('pattern'));
-            return pattern.test(value) === false;
+        patternMismatch: function (input, value) {
+            return input.getAttribute('pattern') && new RegExp(input.getAttribute('pattern')).test(value) === false;
         },
 
-        valueMissing: function ($input, value) {
+        valueMissing: function (input, value) {
             var retVal = false;
-
-            switch ($input.attr('type')) {
+            switch (input.getAttribute('type') || input.nodeName.toLowerCase()) {
             case 'checkbox':
-                retVal = !$input[0].checked;
+                retVal = !input.checked;
                 break;
             case 'radio':
             case 'range':
+                break;
+            case 'select':
+                retVal = !input[input.selectedIndex + 1].getAttribute('value');
                 break;
             default:
                 retVal = (value === '');
                 break;
             }
-
             return retVal;
         }
 
     };
 
-    HTMLInputElement.prototype.checkValidity = function () {
-        return updateValidityState(this).valid;
+    var properties = {
+        checkValidity: function checkValidity() {
+            var valid = updateValidityState(this).valid;
+            if (!valid) {
+                // Old-fashioned way to create events
+                var event = document.createEvent('Event');
+                event.initEvent('invalid', true, true);
+                this.dispatchEvent(event);
+            }
+            return valid;
+        },
+        setCustomValidity: function setCustomValidity(message) {
+            // validationMessage is readonly, by deleting it first
+            // it can be re-defined.
+            delete this.validationMessage;
+            this.validationMessage = message;
+        },
+        validity: {
+            get: function getValidityState() {
+                return updateValidityState(this);
+            },
+            configurable: true,
+        },
+        willValidate: true
     };
 
-    HTMLSelectElement.prototype.checkValidity = function () {
-        return updateValidityState(this).valid;
-    };
+    function addProperties() {
+        var i = -1,
+            len = constructors.length,
+            name;
 
-    HTMLTextAreaElement.prototype.checkValidity = function () {
-        return updateValidityState(this).valid;
-    };
+        while (len > ++i) {
+            for (name in properties) {
+                if (properties.hasOwnProperty(name)) {
+                    defineProperties();
+                }
+            }
+        }
 
-    Object.defineProperty(HTMLInputElement.prototype, 'validity', {
-        get: function () {
-            return updateValidityState(this);
-        },
-        configurable: true,
-    });
+        function defineProperties() {
+            if (typeof properties[name] === 'object') {
+                Object.defineProperty(constructors[i].prototype, name, properties[name]);
+            } else {
+                constructors[i].prototype[name] = properties[name];
+            }
+        }
 
-    Object.defineProperty(HTMLSelectElement.prototype, 'validity', {
-        get: function () {
-            return updateValidityState(this);
-        },
-        configurable: true,
-    });
-
-    Object.defineProperty(HTMLTextAreaElement.prototype, 'validity', {
-        get: function () {
-            return updateValidityState(this);
-        },
-        configurable: true,
-    });
+    }
 
     function updateValidityState(input) {
         var states = { valid: true },
-            $input = $(input),
             name;
-
         for (name in validityRoutines) {
             if (validityRoutines.hasOwnProperty(name)) {
-                states[name] = validityRoutines[name]($input, $input.val());
+                states[name] = validityRoutines[name](input, input.value);
                 if (states[name]) {
                     states.valid = false;
                 }
 
             }
         }
-
         return states;
     }
 
+    addProperties();
+
 }());
+

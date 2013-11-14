@@ -2,5 +2,7 @@
 *.xml
 *.log
 *.sublime*
+*.md
+test/lib/
 node_modules/
 package.json

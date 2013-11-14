@@ -1,13 +1,17 @@
 'use strict';
 
 global.expect = require('chai').expect;
+var sinon = require('sinon');
 
-describe('HTML5 Validation', function () {
+describe('HTML% Validation', function () {
 
     // Only want to run these tests in IE9
     // These pass in Safari and Chrome
     // But Validitystate implementation is different
     // in FF causing these tests to break
+    if (document.createElement('input').validity) {
+        return;
+    }
 
     var telRegExp = new RegExp(/^\+*\d+[\d ]+$/),
 
@@ -15,6 +19,7 @@ describe('HTML5 Validation', function () {
         '<div>' +
             '<input type="text">' +
             '<input type="text" required>' +
+            '<input type="text" disabled>' +
             '<input type="checkbox">' +
             '<input type="checkbox" required>' +
             '<input type="radio">' +
@@ -36,11 +41,18 @@ describe('HTML5 Validation', function () {
                 '<option value="3">value3</option>' +
                 '<option value="4">value4</option>' +
             '</select>' +
+            '<select required>' +
+                '<option value>Select</option>' +
+                '<option value="1">value1</option>' +
+                '<option value="2">value2</option>' +
+                '<option value="3">value3</option>' +
+                '<option value="4">value4</option>' +
+            '</select>' +
             '<textarea></textarea>' +
             '<textarea required></textarea>' +
         '</div>');
 
-    require('../index.js');
+    require('../index');
 
     before(function () {
         $('#test-body').append($el);
@@ -93,6 +105,20 @@ describe('HTML5 Validation', function () {
                         .and.equal(true);
 
                 });
+
+            });
+
+        });
+
+        describe('[disabled]', function () {
+
+            it('will not validate', function () {
+
+                $el.find('input[type="text"][disabled]').val('valid string');
+
+                expect($el.find('input[type="text"][disabled]')[0].validity)
+                    .to.have.property('valid')
+                    .and.equal(true);
 
             });
 
@@ -632,21 +658,127 @@ describe('HTML5 Validation', function () {
 
     describe('checkValidity', function () {
 
-        it('returns true if valid', function () {
+        describe('input[required]', function () {
 
-            $el.find('input[type="text"][required]').val('a string');
+            it('returns true if not empty (valid)', function () {
 
-            expect($el.find('input[type="text"][required]')[0].checkValidity()).equals(true);
+                $el.find('input[type="text"][required]').val('a string');
+
+                expect($el.find('input[type="text"][required]')[0].checkValidity()).to.equal(true);
+
+            });
+
+            it('returns false if empty (invalid)', function () {
+
+                $el.find('input[type="text"][required]').val('');
+
+                expect($el.find('input[type="text"][required]')[0].checkValidity()).to.equal(false);
+
+            });
+
+            it('triggers "invalid" if empty (invalid)', function () {
+
+                sinon.spy($el.find('input[type="text"][required]')[0], 'dispatchEvent');
+
+                $el.find('input[type="text"][required]').val('');
+
+                $el.find('input[type="text"][required]')[0].checkValidity();
+
+                expect($el.find('input[type="text"][required]')[0].dispatchEvent)
+                    .to.have.been.called;
+
+            });
 
         });
 
-        it('returns false if invalid', function () {
+        describe('textarea[required]', function () {
 
-            $el.find('input[type="text"][required]').val('');
+            it('returns true if not empty (valid)', function () {
 
-            expect($el.find('input[type="text"][required]')[0].checkValidity()).equals(false);
+                $el.find('textarea[required]').val('a string');
+
+                expect($el.find('textarea[required]')[0].checkValidity()).to.equal(true);
+
+            });
+
+            it('returns false if empty (invalid)', function () {
+
+                $el.find('textarea[required]').val('');
+
+                expect($el.find('textarea[required]')[0].checkValidity()).to.equal(false);
+
+            });
+
+            it('triggers "invalid" if empty (invalid)', function () {
+
+                sinon.spy($el.find('textarea[required]')[0], 'dispatchEvent');
+
+                $el.find('textarea[required]').val('');
+
+                $el.find('textarea[required]')[0].checkValidity();
+
+                //console.log($el.find('textarea[required]')[0].validity);
+
+                expect($el.find('textarea[required]')[0].dispatchEvent)
+                    .to.have.been.called;
+
+            });
+
+        });
+
+        describe('select[required]', function () {
+
+            it('returns true if not empty (valid)', function () {
+
+                $el.find('select[required]').val('1').change();
+
+                expect($el.find('select[required]')[0].checkValidity()).to.equal(true);
+
+            });
+
+            it('returns false if empty (invalid)', function () {
+
+                $el.find('select[required]').val('0').change();
+
+                expect($el.find('select[required]')[0].checkValidity()).to.equal(false);
+
+            });
+
+            it('triggers "invalid" if empty (invalid)', function () {
+
+                sinon.spy($el.find('select[required]')[0], 'dispatchEvent');
+
+                $el.find('select[required]')[0].selectedIndex = 0;
+
+                //console.log($el.find('select[required]')[0].value)
+
+                $el.find('select[required]')[0].checkValidity();
+
+                expect($el.find('select[required]')[0].dispatchEvent)
+                    .to.have.been.called;
+
+            });
 
         });
 
     });
+
+    describe('setCustomValidity', function () {
+
+        var message = 'Custom validation message';
+
+        describe('input', function () {
+
+            it('sets the message on input.validationMessage', function () {
+
+                $el.find('input[required]')[0].setCustomValidity(message);
+
+                expect($el.find('input[required]')[0].validationMessage).to.equal(message);
+
+            });
+
+        });
+
+    });
+
 });
