@@ -1,9 +1,6 @@
 'use strict';
 
-global.expect = require('chai').expect;
-var sinon = require('sinon');
-
-describe('HTML% Validation', function () {
+describe('HTML5 Validation', function () {
 
     // Only want to run these tests in IE9
     // These pass in Safari and Chrome
@@ -12,6 +9,11 @@ describe('HTML% Validation', function () {
     if (document.createElement('input').validity) {
         return;
     }
+
+    var sinon = require('sinon');
+    var expect = require('chai')
+        .use(require('sinon-chai'))
+        .expect;
 
     var telRegExp = new RegExp(/^\+*\d+[\d ]+$/),
 
@@ -717,8 +719,6 @@ describe('HTML% Validation', function () {
 
                 $el.find('textarea[required]')[0].checkValidity();
 
-                //console.log($el.find('textarea[required]')[0].validity);
-
                 expect($el.find('textarea[required]')[0].dispatchEvent)
                     .to.have.been.called;
 
@@ -748,9 +748,7 @@ describe('HTML% Validation', function () {
 
                 sinon.spy($el.find('select[required]')[0], 'dispatchEvent');
 
-                $el.find('select[required]')[0].selectedIndex = 0;
-
-                //console.log($el.find('select[required]')[0].value)
+                $el.find('select[required]').change();
 
                 $el.find('select[required]')[0].checkValidity();
 

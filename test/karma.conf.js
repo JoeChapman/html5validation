@@ -27,6 +27,8 @@ module.exports = function (config) {
             'test/lib/jquery-1.10.1.js',
             'node_modules/chai/chai.js',
             'node_modules/chai-jquery/chai-jquery.js',
+            'node_modules/sinon/lib/sinon.js',
+            'node_modules/sinon-chai/lib/sinon-chai.js',
             'test/index.test.js'
         ],
 
