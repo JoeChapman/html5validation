@@ -1,35 +1,36 @@
 {
-    "name": "html5validation",
-    "version": "0.0.1",
-    "description": "IE shim for HTML5 ValidityState",
-    "main": "index.js",
-    "scripts": {
-        "test": "./node_modules/karma/bin/karma start test/karma.conf.js",
-        "lint": "[ -z \"$LINTFILES\" ] && LINTFILES='**'; ./node_modules/jshint/bin/jshint ${LINTFILES}"
-    },
-    "repository": {
-        "type": "git",
-        "url": "github:JoeChapman/html5validation"
-    },
-    "author": "JoeChapman",
-    "email": "info@josephchapman.com",
-    "license": "MIT",
-    "readmeFilename": "README.md",
-    "devDependencies": {
-        "express": "3.4.4",
-        "enchilada": "0.5.0",
-        "mocha": "1.13.0",
-        "chai": "1.7.2",
-        "chai-jquery": "1.1.2",
-        "sinon": "1.7.3",
-        "sinon-chai": "2.4.0",
-        "karma": "~0.10",
-        "karma-mocha": "~0.1",
-        "karma-chrome-launcher": "~0.1",
-        "karma-safari-launcher": "0.1",
-        "karma-browserify": "git://github.com/ConnectedHomes/karma-browserify.git#fb1f2296a6159949c9dd66ac7a2d444dd0dda9da",
-        "karma-junit-reporter": "0.1",
-        "jshint": "2.1.10",
-        "browserify": "2.35.1"
-    }
+  "name": "html5validation",
+  "version": "0.0.1",
+  "description": "IE shim for HTML5 ValidityState",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/karma/bin/karma start karma.conf.js",
+    "lint": "[ -z \"$LINTFILES\" ] && LINTFILES='**'; ./node_modules/jshint/bin/jshint ${LINTFILES}"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github:JoeChapman/html5validation"
+  },
+  "author": "JoeChapman",
+  "email": "info@josephchapman.com",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "express": "3.4.4",
+    "enchilada": "0.5.0",
+    "mocha": "1.13.0",
+    "chai": "1.7.2",
+    "chai-jquery": "1.1.2",
+    "sinon": "1.7.2",
+    "sinon-chai": "2.4.0",
+    "karma": "~0.10.0",
+    "karma-mocha": "~0.1",
+    "karma-chrome-launcher": "~0.1",
+    "karma-safari-launcher": "0.1",
+    "karma-browserify": "0.0.5",
+    "karma-junit-reporter": "0.1",
+    "jshint": "2.1.10",
+    "browserify": "2.35.1",
+    "karma-sinon-chai": "~0.1.4"
+  }
 }

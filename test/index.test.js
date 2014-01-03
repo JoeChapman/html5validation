@@ -2,19 +2,6 @@
 
 describe('HTML5 Validation', function () {
 
-    // Only want to run these tests in IE9
-    // These pass in Safari and Chrome
-    // But Validitystate implementation is different
-    // in FF causing these tests to break
-    if (document.createElement('input').validity) {
-        return;
-    }
-
-    var sinon = require('sinon');
-    var expect = require('chai')
-        .use(require('sinon-chai'))
-        .expect;
-
     var telRegExp = new RegExp(/^\+*\d+[\d ]+$/),
 
         $el = $(

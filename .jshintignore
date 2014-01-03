@@ -3,6 +3,9 @@
 *.log
 *.sublime*
 *.md
+*.yml
 test/lib/
 node_modules/
 package.json
+LICENSE
+karma.conf.js
