@@ -11,6 +11,10 @@ var urlRegExp = /(http(?:s)?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{
 
 module.exports = (function () {
 
+    if (document.createElement('input').validity) {
+        return;
+    }
+
     var constructors = [
         HTMLInputElement,
         HTMLSelectElement,
