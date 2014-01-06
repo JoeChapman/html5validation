@@ -12,7 +12,7 @@ describe('HTML5 Validation', function () {
     var telRegExp = new RegExp(/^\+*\d+[\d ]+$/),
 
         $el = $(
-        '<div>' +
+        '<form>' +
             '<input type="text">' +
             '<input type="text" required>' +
             '<input type="text" disabled>' +
@@ -46,7 +46,7 @@ describe('HTML5 Validation', function () {
             '</select>' +
             '<textarea></textarea>' +
             '<textarea required></textarea>' +
-        '</div>');
+        '</form>');
 
     require('../index');
 
