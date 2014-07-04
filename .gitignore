@@ -1,13 +1,5 @@
 .DS_Store
 lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-*.pem
 
 pids
 logs
