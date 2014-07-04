@@ -9,11 +9,7 @@ var emailRegExp = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]
 // http://regexlib.com/REDetails.aspx?regexp_id=1854
 var urlRegExp = /(http(?:s)?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(?:\/?|(?:\/[\w\-]+)*)(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)$/;
 
-(function () {
-
-    if (document.createElement('input').validity) {
-        return;
-    }
+var validityState = (function validityState() {
 
     var constructors = [
         HTMLInputElement,
@@ -157,5 +153,9 @@ var urlRegExp = /(http(?:s)?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{
 
     addProperties();
 
-}());
+})();
+
+if (module && module.exports) {
+    module.exports = validityState;
+}
 

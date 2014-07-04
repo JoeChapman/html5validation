@@ -1,18 +1,24 @@
 HTML5 Validation
 ================
 
-Adds support for HTML5 validation in IE9 browser
+Cross browser support for HTML5 validityState
 
 Read <pre>input.validity.valid</pre> or execute <pre>input.checkValidity()</pre>
 to get the validity state.
 
-### To use
+### Usage
 
-Add index.js to your project and link to it from your app.
+Either
+```html
+<script src='path/to/index.js'>
+```
+or with Browserify
+```js
+require('html5validation');
+```
 
-### To test
+### Tests
 
-A simple Express server has been written to enable tests.
-You'll need to <a href='http://nodejs.org/'>install NodeJS</a>, 
-then run <pre>npm install</pre> to install the dependencies.
-Once you're set up, run <pre>npm test</pre> and browse to <a href='http://localhost:3003/'>http://localhost:3003/</a>
+```
+$ npm test
+```

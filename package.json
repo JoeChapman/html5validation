@@ -1,10 +1,10 @@
 {
     "name": "html5validation",
     "version": "0.0.1",
-    "description": "IE shim for HTML5 ValidityState",
+    "description": "HTML5 ValidityState shim",
     "main": "index.js",
     "scripts": {
-        "test": "node test.js",
+        "test": "karma start",
         "lint": "[ -z \"$LINTFILES\" ] && LINTFILES='**'; ./node_modules/jshint/bin/jshint ${LINTFILES}"
     },
     "repository": {
@@ -16,12 +16,16 @@
     "license": "MIT",
     "readmeFilename": "README.md",
     "devDependencies": {
-        "express": "3.4.4",
-        "enchilada": "0.5.0",
-        "mocha": "1.13.0",
-        "chai": "1.7.2",
-        "sinon": "1.7.2",
         "jshint": "2.1.10",
-        "browserify": "2.35.1"
+        "karma": "0.12.16",
+        "karma-chrome-launcher": "0.1.4",
+        "karma-mocha": "0.1.4",
+        "mocha": "1.20.1",
+        "sinon": "1.10.2",
+        "chai": "1.7.2",
+        "sinon-chai": "2.5.0",
+        "jquery": "2.1.1",
+        "karma-browserify": "0.2.1",
+        "browserify": "4.1.11"
     }
 }

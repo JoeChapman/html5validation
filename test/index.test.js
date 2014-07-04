@@ -2,10 +2,6 @@
 
 describe('HTML5 Validation', function () {
 
-    if (document.createElement('input').validity) {
-        return;
-    }
-
     var sinon = require('sinon'),
         expect = require('chai').expect;
 
