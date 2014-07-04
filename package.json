@@ -2,6 +2,12 @@
     "name": "html5validation",
     "version": "0.0.1",
     "description": "HTML5 ValidityState shim",
+    "keywords": [
+        "Validation",
+        "ValidityState",
+        "HTML5",
+        "Shim"
+    ],
     "main": "index.js",
     "scripts": {
         "test": "karma start",

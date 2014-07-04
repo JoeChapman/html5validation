@@ -1,7 +1,7 @@
 HTML5 Validation
 ================
 
-Cross browser support for HTML5 validityState
+Cross browser support for HTML5 ValidityState
 
 Read <pre>input.validity.valid</pre> or execute <pre>input.checkValidity()</pre>
 to get the validity state.
