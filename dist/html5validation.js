@@ -62,82 +62,78 @@
 
 	var constructors = [HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement];
 
-	var validityState = function validityState() {
-	  var routines = {
-	    customError: customError,
-	    badInput: badInput,
-	    typeMismatch: typeMismatch,
-	    rangeUnderflow: rangeUnderflow,
-	    rangeOverflow: rangeOverflow,
-	    stepMismatch: stepMismatch,
-	    tooLong: tooLong,
-	    patternMismatch: patternMismatch,
-	    valueMissing: valueMissing
-	  };
+	var routines = {
+	  customError: customError,
+	  badInput: badInput,
+	  typeMismatch: typeMismatch,
+	  rangeUnderflow: rangeUnderflow,
+	  rangeOverflow: rangeOverflow,
+	  stepMismatch: stepMismatch,
+	  tooLong: tooLong,
+	  patternMismatch: patternMismatch,
+	  valueMissing: valueMissing
+	};
 
-	  var properties = {
-	    checkValidity: function checkValidity() {
-	      var valid = updateValidityState(this).valid;
+	var properties = {
+	  checkValidity: function checkValidity() {
+	    var valid = updateValidityState(this).valid;
 
-	      if (!valid) {
-	        // Old-fashioned way to create events
-	        var event = document.createEvent('Event');
-	        event.initEvent('invalid', true, true);
+	    if (!valid) {
+	      // Old-fashioned way to create events
+	      var event = document.createEvent('Event');
+	      event.initEvent('invalid', true, true);
 
-	        this.dispatchEvent(event);
-	      }
+	      this.dispatchEvent(event);
+	    }
 
-	      return valid;
-	    },
-	    setCustomValidity: function setCustomValidity(message) {
-	      // validationMessage is readonly, by deleting it first
-	      // it can be re-defined.
-	      delete this.validationMessage;
-	      this.validationMessage = message;
-	    },
+	    return valid;
+	  },
+	  setCustomValidity: function setCustomValidity(message) {
+	    // validationMessage is readonly, by deleting it first
+	    // it can be re-defined.
+	    delete this.validationMessage;
+	    this.validationMessage = message;
+	  },
 
-	    validity: {
-	      get: function get() {
-	        return updateValidityState(this);
-	      },
-
-	      configurable: true
+	  validity: {
+	    get: function get() {
+	      return updateValidityState(this);
 	    },
 
-	    willValidate: true
-	  };
+	    configurable: true
+	  },
 
-	  function addProperties() {
-	    for (var i = 0; i < constructors.length; i++) {
-	      for (var name in properties) {
-	        if (!properties.hasOwnProperty(name)) continue;
+	  willValidate: true
+	};
 
-	        if (_typeof(properties[name]) === 'object') {
-	          Object.defineProperty(constructors[i].prototype, name, properties[name]);
-	        } else {
-	          constructors[i].prototype[name] = properties[name];
-	        }
+	function addProperties() {
+	  for (var i = 0; i < constructors.length; i++) {
+	    for (var name in properties) {
+	      if (!properties.hasOwnProperty(name)) continue;
+
+	      if (_typeof(properties[name]) === 'object') {
+	        Object.defineProperty(constructors[i].prototype, name, properties[name]);
+	      } else {
+	        constructors[i].prototype[name] = properties[name];
 	      }
 	    }
 	  }
+	}
 
-	  function updateValidityState(input) {
-	    var states = { valid: true };
+	function updateValidityState(input) {
+	  var states = { valid: true };
 
-	    for (var name in routines) {
-	      if (!routines.hasOwnProperty(name)) continue;
+	  for (var name in routines) {
+	    if (!routines.hasOwnProperty(name)) continue;
 
-	      states[name] = routines[name](input);
-	      if (states[name]) states.valid = false;
-	    }
-
-	    return states;
+	    states[name] = routines[name](input);
+	    if (states[name]) states.valid = false;
 	  }
 
-	  addProperties();
-	}();
+	  return states;
+	}
 
-	module.exports = validityState;
+	addProperties();
 
 /***/ },
 /* 1 */

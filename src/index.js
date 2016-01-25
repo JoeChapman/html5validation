@@ -16,80 +16,76 @@ const constructors = [
   HTMLTextAreaElement
 ]
 
-const validityState = (function validityState () {
-  const routines = {
-    customError,
-    badInput,
-    typeMismatch,
-    rangeUnderflow,
-    rangeOverflow,
-    stepMismatch,
-    tooLong,
-    patternMismatch,
-    valueMissing
-  }
+const routines = {
+  customError,
+  badInput,
+  typeMismatch,
+  rangeUnderflow,
+  rangeOverflow,
+  stepMismatch,
+  tooLong,
+  patternMismatch,
+  valueMissing
+}
 
-  const properties = {
-    checkValidity () {
-      const valid = updateValidityState(this).valid
+const properties = {
+  checkValidity () {
+    const valid = updateValidityState(this).valid
 
-      if (!valid) {
-        // Old-fashioned way to create events
-        const event = document.createEvent('Event')
-        event.initEvent('invalid', true, true)
+    if (!valid) {
+      // Old-fashioned way to create events
+      const event = document.createEvent('Event')
+      event.initEvent('invalid', true, true)
 
-        this.dispatchEvent(event)
-      }
+      this.dispatchEvent(event)
+    }
 
-      return valid
+    return valid
+  },
+
+  setCustomValidity (message) {
+    // validationMessage is readonly, by deleting it first
+    // it can be re-defined.
+    delete this.validationMessage
+    this.validationMessage = message
+  },
+
+  validity: {
+    get () {
+      return updateValidityState(this)
     },
 
-    setCustomValidity (message) {
-      // validationMessage is readonly, by deleting it first
-      // it can be re-defined.
-      delete this.validationMessage
-      this.validationMessage = message
-    },
+    configurable: true
+  },
 
-    validity: {
-      get () {
-        return updateValidityState(this)
-      },
+  willValidate: true
+}
 
-      configurable: true
-    },
+function addProperties () {
+  for (let i = 0; i < constructors.length; i++) {
+    for (let name in properties) {
+      if (!properties.hasOwnProperty(name)) continue
 
-    willValidate: true
-  }
-
-  function addProperties () {
-    for (let i = 0; i < constructors.length; i++) {
-      for (let name in properties) {
-        if (!properties.hasOwnProperty(name)) continue
-
-        if (typeof properties[name] === 'object') {
-          Object.defineProperty(constructors[i].prototype, name, properties[name])
-        } else {
-          constructors[i].prototype[name] = properties[name]
-        }
+      if (typeof properties[name] === 'object') {
+        Object.defineProperty(constructors[i].prototype, name, properties[name])
+      } else {
+        constructors[i].prototype[name] = properties[name]
       }
     }
   }
+}
 
-  function updateValidityState (input) {
-    const states = { valid: true }
+function updateValidityState (input) {
+  const states = { valid: true }
 
-    for (let name in routines) {
-      if (!routines.hasOwnProperty(name)) continue
+  for (let name in routines) {
+    if (!routines.hasOwnProperty(name)) continue
 
-      states[name] = routines[name](input)
-      if (states[name]) states.valid = false
-    }
-
-    return states
+    states[name] = routines[name](input)
+    if (states[name]) states.valid = false
   }
 
-  addProperties()
-})()
+  return states
+}
 
-module.exports = validityState
+addProperties()
