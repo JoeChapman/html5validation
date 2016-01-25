@@ -1,14 +1,4 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["html5validation"] = factory();
-	else
-		root["html5validation"] = factory();
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -137,7 +127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    for (var name in routines) {
 	      if (!routines.hasOwnProperty(name)) continue;
 
-	      states[name] = routines[name](input, input.value);
+	      states[name] = routines[name](input);
 	      if (states[name]) states.valid = false;
 	    }
 
@@ -186,9 +176,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	// http://regexlib.com/REDetails.aspx?regexp_id=1854
 	var urlRegExp = /(http(?:s)?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(?:\/?|(?:\/[\w\-]+)*)(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)$/;
 
-	module.exports = function (input, value) {
-	  if (valueMissing(input, value) === true) return true;
+	module.exports = function (input) {
+	  if (valueMissing(input) === true) return true;
 
+	  var value = input.value;
 	  var type = input.getAttribute('type');
 
 	  if (type === 'number') return !numberRegExp.test(Number(value));else if (type === 'url') return !urlRegExp.test(value);else if (type === 'email') return !emailRegExp.test(value);
@@ -202,7 +193,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	module.exports = function (input, value) {
+	module.exports = function (input) {
 	  var retVal = false;
 	  switch (input.getAttribute('type') || input.nodeName.toLowerCase()) {
 	    case 'checkbox':
@@ -215,7 +206,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      retVal = !input[input.selectedIndex + 1].getAttribute('value');
 	      break;
 	    default:
-	      retVal = value === '';
+	      retVal = input.value === '';
 	      break;
 	  }
 	  return retVal;
@@ -227,8 +218,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	module.exports = function (input, value) {
-	  return !!input.getAttribute('min') && Number(value) < Number(input.getAttribute('min'));
+	module.exports = function (input) {
+	  return !!input.getAttribute('min') && Number(input.value) < Number(input.getAttribute('min'));
 	};
 
 /***/ },
@@ -237,8 +228,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	module.exports = function (input, value) {
-	  return !!input.getAttribute('max') && Number(value) > Number(input.getAttribute('max'));
+	module.exports = function (input) {
+	  return !!input.getAttribute('max') && Number(input.value) > Number(input.getAttribute('max'));
 	};
 
 /***/ },
@@ -247,8 +238,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	module.exports = function (input, value) {
-	  return !!input.getAttribute('step') && value % Number(input.getAttribute('step')) !== 0;
+	module.exports = function (input) {
+	  return !!input.getAttribute('step') && input.value % Number(input.getAttribute('step')) !== 0;
 	};
 
 /***/ },
@@ -257,8 +248,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	module.exports = function (input, value) {
-	  return !!input.getAttribute('maxlength') && value.length > Number(input.getAttribute('maxlength'));
+	module.exports = function (input) {
+	  return !!input.getAttribute('maxlength') && input.value.length > Number(input.getAttribute('maxlength'));
 	};
 
 /***/ },
@@ -267,11 +258,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	module.exports = function (input, value) {
-	  return input.getAttribute('pattern') && new RegExp(input.getAttribute('pattern')).test(value) === false;
+	module.exports = function (input) {
+	  return input.getAttribute('pattern') && new RegExp(input.getAttribute('pattern')).test(input.value) === false;
 	};
 
 /***/ }
-/******/ ])
-});
-;
+/******/ ]);

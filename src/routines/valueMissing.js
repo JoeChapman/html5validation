@@ -1,4 +1,4 @@
-module.exports = function (input, value) {
+module.exports = function (input) {
   var retVal = false
   switch (input.getAttribute('type') || input.nodeName.toLowerCase()) {
     case 'checkbox':
@@ -11,7 +11,7 @@ module.exports = function (input, value) {
       retVal = !input[input.selectedIndex + 1].getAttribute('value')
       break
     default:
-      retVal = (value === '')
+      retVal = (input.value === '')
       break
   }
   return retVal

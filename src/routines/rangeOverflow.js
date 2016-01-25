@@ -1,3 +1,3 @@
-module.exports = function (input, value) {
-  return !!input.getAttribute('max') && Number(value) > Number(input.getAttribute('max'))
+module.exports = function (input) {
+  return !!input.getAttribute('max') && Number(input.value) > Number(input.getAttribute('max'))
 }

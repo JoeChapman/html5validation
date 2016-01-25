@@ -82,7 +82,7 @@ const validityState = (function validityState () {
     for (let name in routines) {
       if (!routines.hasOwnProperty(name)) continue
 
-      states[name] = routines[name](input, input.value)
+      states[name] = routines[name](input)
       if (states[name]) states.valid = false
     }
 

@@ -6,9 +6,7 @@ module.exports = {
 
   output: {
     path: path.join(__dirname, '/dist'),
-    filename: 'html5validation' + (argv.p ? '.min' : '') + '.js',
-    library: 'html5validation',
-    libraryTarget: 'umd'
+    filename: 'html5validation' + (argv.p ? '.min' : '') + '.js'
   },
 
   module: {
