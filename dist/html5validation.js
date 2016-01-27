@@ -46,94 +46,59 @@
 
 	'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 	/* global HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement */
 
-	var customError = __webpack_require__(1);
-	var badInput = __webpack_require__(2);
-	var typeMismatch = __webpack_require__(3);
-	var rangeUnderflow = __webpack_require__(5);
-	var rangeOverflow = __webpack_require__(6);
-	var stepMismatch = __webpack_require__(7);
-	var tooLong = __webpack_require__(8);
-	var patternMismatch = __webpack_require__(9);
-	var valueMissing = __webpack_require__(4);
-
-	var constructors = [HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement];
-
 	var routines = {
-	  customError: customError,
-	  badInput: badInput,
-	  typeMismatch: typeMismatch,
-	  rangeUnderflow: rangeUnderflow,
-	  rangeOverflow: rangeOverflow,
-	  stepMismatch: stepMismatch,
-	  tooLong: tooLong,
-	  patternMismatch: patternMismatch,
-	  valueMissing: valueMissing
-	};
-
-	var properties = {
-	  checkValidity: function checkValidity() {
-	    var valid = updateValidityState(this).valid;
-
-	    if (!valid) {
-	      // Old-fashioned way to create events
-	      var event = document.createEvent('Event');
-	      event.initEvent('invalid', true, true);
-
-	      this.dispatchEvent(event);
-	    }
-
-	    return valid;
-	  },
-	  setCustomValidity: function setCustomValidity(message) {
-	    // validationMessage is readonly, by deleting it first
-	    // it can be re-defined.
-	    delete this.validationMessage;
-	    this.validationMessage = message;
-	  },
-
-	  validity: {
+	  customError: __webpack_require__(1),
+	  badInput: __webpack_require__(2),
+	  typeMismatch: __webpack_require__(3),
+	  rangeUnderflow: __webpack_require__(5),
+	  rangeOverflow: __webpack_require__(6),
+	  stepMismatch: __webpack_require__(7),
+	  tooLong: __webpack_require__(8),
+	  patternMismatch: __webpack_require__(9),
+	  valueMissing: __webpack_require__(4)
+	};[HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement].forEach(function (constructor) {
+	  Object.defineProperty(constructor.prototype, 'validity', {
 	    get: function get() {
-	      return updateValidityState(this);
+	      var validity = { valid: true };
+
+	      for (var name in routines) {
+	        if (!routines.hasOwnProperty(name)) continue;
+
+	        validity[name] = routines[name](this);
+	        if (validity[name] === true) validity.valid = false;
+	      }
+
+	      return validity;
 	    },
 
 	    configurable: true
-	  },
+	  });
 
-	  willValidate: true
-	};
+	  constructor.prototype.checkValidity = function () {
+	    var isValid = this.validity.valid;
 
-	function addProperties() {
-	  for (var i = 0; i < constructors.length; i++) {
-	    for (var name in properties) {
-	      if (!properties.hasOwnProperty(name)) continue;
-
-	      if (_typeof(properties[name]) === 'object') {
-	        Object.defineProperty(constructors[i].prototype, name, properties[name]);
-	      } else {
-	        constructors[i].prototype[name] = properties[name];
-	      }
+	    if (!isValid) {
+	      // Old-fashioned way to create events
+	      // the new way is still not supported by IE
+	      var event = document.createEvent('Event');
+	      event.initEvent('invalid', true, true);
+	      this.dispatchEvent(event);
 	    }
-	  }
-	}
 
-	function updateValidityState(input) {
-	  var states = { valid: true };
+	    return isValid;
+	  };
 
-	  for (var name in routines) {
-	    if (!routines.hasOwnProperty(name)) continue;
+	  constructor.prototype.setCustomValidity = function (message) {
+	    // validationMessage is readonly
+	    // by deleting it first it can be re-defined.
+	    delete this.validationMessage;
+	    this.validationMessage = message;
+	  };
 
-	    states[name] = routines[name](input);
-	    if (states[name]) states.valid = false;
-	  }
-
-	  return states;
-	}
-
-	addProperties();
+	  constructor.prototype.willValidate = true;
+	});
 
 /***/ },
 /* 1 */

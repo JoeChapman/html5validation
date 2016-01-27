@@ -1,91 +1,55 @@
 /* global HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement */
 
-const customError = require('./routines/customError')
-const badInput = require('./routines/badInput')
-const typeMismatch = require('./routines/typeMismatch')
-const rangeUnderflow = require('./routines/rangeUnderflow')
-const rangeOverflow = require('./routines/rangeOverflow')
-const stepMismatch = require('./routines/stepMismatch')
-const tooLong = require('./routines/tooLong')
-const patternMismatch = require('./routines/patternMismatch')
-const valueMissing = require('./routines/valueMissing')
-
-const constructors = [
-  HTMLInputElement,
-  HTMLSelectElement,
-  HTMLTextAreaElement
-]
-
 const routines = {
-  customError,
-  badInput,
-  typeMismatch,
-  rangeUnderflow,
-  rangeOverflow,
-  stepMismatch,
-  tooLong,
-  patternMismatch,
-  valueMissing
+  customError: require('./routines/customError'),
+  badInput: require('./routines/badInput'),
+  typeMismatch: require('./routines/typeMismatch'),
+  rangeUnderflow: require('./routines/rangeUnderflow'),
+  rangeOverflow: require('./routines/rangeOverflow'),
+  stepMismatch: require('./routines/stepMismatch'),
+  tooLong: require('./routines/tooLong'),
+  patternMismatch: require('./routines/patternMismatch'),
+  valueMissing: require('./routines/valueMissing')
 }
 
-const properties = {
-  checkValidity () {
-    const valid = updateValidityState(this).valid
+;[HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement]
+  .forEach(function (constructor) {
+    Object.defineProperty(constructor.prototype, 'validity', {
+      get () {
+        const validity = { valid: true }
 
-    if (!valid) {
-      // Old-fashioned way to create events
-      const event = document.createEvent('Event')
-      event.initEvent('invalid', true, true)
+        for (let name in routines) {
+          if (!routines.hasOwnProperty(name)) continue
 
-      this.dispatchEvent(event)
-    }
+          validity[name] = routines[name](this)
+          if (validity[name] === true) validity.valid = false
+        }
 
-    return valid
-  },
+        return validity
+      },
+      configurable: true
+    })
 
-  setCustomValidity (message) {
-    // validationMessage is readonly, by deleting it first
-    // it can be re-defined.
-    delete this.validationMessage
-    this.validationMessage = message
-  },
+    constructor.prototype.checkValidity = function () {
+      const isValid = this.validity.valid
 
-  validity: {
-    get () {
-      return updateValidityState(this)
-    },
-
-    configurable: true
-  },
-
-  willValidate: true
-}
-
-function addProperties () {
-  for (let i = 0; i < constructors.length; i++) {
-    for (let name in properties) {
-      if (!properties.hasOwnProperty(name)) continue
-
-      if (typeof properties[name] === 'object') {
-        Object.defineProperty(constructors[i].prototype, name, properties[name])
-      } else {
-        constructors[i].prototype[name] = properties[name]
+      if (!isValid) {
+        // Old-fashioned way to create events
+        // the new way is still not supported by IE
+        const event = document.createEvent('Event')
+        event.initEvent('invalid', true, true)
+        this.dispatchEvent(event)
       }
+
+      return isValid
     }
-  }
-}
 
-function updateValidityState (input) {
-  const states = { valid: true }
+    constructor.prototype.setCustomValidity = function (message) {
+      // validationMessage is readonly
+      // by deleting it first it can be re-defined.
+      delete this.validationMessage
+      this.validationMessage = message
+    }
 
-  for (let name in routines) {
-    if (!routines.hasOwnProperty(name)) continue
-
-    states[name] = routines[name](input)
-    if (states[name]) states.valid = false
-  }
-
-  return states
-}
-
-addProperties()
+    constructor.prototype.willValidate = true
+  })
