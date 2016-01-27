@@ -6,11 +6,8 @@ function isValid (validity) {
   for (let key in validity) {
     const value = validity[key]
 
-    if (key === 'valid') {
-      if (value === false) return false
-    } else if (value === true) {
-      return false
-    }
+    if (key === 'valid' && value === false) return false
+    if (key !== 'valid' && value === true) return false
   }
 
   return true
@@ -76,6 +73,38 @@ describe('HTML5 validation', function () {
       expect(input.validity.patternMismatch).toBe(true)
       expect(input.validity.valid).toBe(false)
       expect(input.checkValidity()).toBe(false)
+    })
+
+    it('should be valid if value length is lower than maxlength', function () {
+      input.setAttribute('maxlength', '2')
+
+      expect(isValid(input.validity)).toBe(true)
+      expect(input.checkValidity()).toBe(true)
+    })
+
+    it('should be invalid if value length is greater than maxlength', function () {
+      input.setAttribute('maxlength', '2')
+      input.value = 'abc'
+
+      expect(input.validity.tooLong).toBe(true)
+      expect(input.validity.valid).toBe(false)
+      expect(input.checkValidity()).toBe(false)
+    })
+
+    it('should be valid when filled with a number that is greater than max', function () {
+      input.setAttribute('max', '2')
+      input.value = '10'
+
+      expect(isValid(input.validity)).toBe(true)
+      expect(input.checkValidity()).toBe(true)
+    })
+
+    it('should be valid when filled with a number that is lower than minlength', function () {
+      input.setAttribute('min', '2')
+      input.value = '0'
+
+      expect(isValid(input.validity)).toBe(true)
+      expect(input.checkValidity()).toBe(true)
     })
   })
 
@@ -226,6 +255,38 @@ describe('HTML5 validation', function () {
       expect(input.validity.valid).toBe(false)
       expect(input.checkValidity()).toBe(false)
     })
+
+    it('should be valid if value length is lower than maxlength', function () {
+      input.setAttribute('maxlength', '2')
+
+      expect(isValid(input.validity)).toBe(true)
+      expect(input.checkValidity()).toBe(true)
+    })
+
+    it('should be invalid if value length is greater than maxlength', function () {
+      input.setAttribute('maxlength', '2')
+      input.value = 'abc'
+
+      expect(input.validity.tooLong).toBe(true)
+      expect(input.validity.valid).toBe(false)
+      expect(input.checkValidity()).toBe(false)
+    })
+
+    it('should be valid when filled with a number that is greater than max', function () {
+      input.setAttribute('max', '2')
+      input.value = '10'
+
+      expect(isValid(input.validity)).toBe(true)
+      expect(input.checkValidity()).toBe(true)
+    })
+
+    it('should be valid when filled with a number that is lower than minlength', function () {
+      input.setAttribute('min', '2')
+      input.value = '0'
+
+      expect(isValid(input.validity)).toBe(true)
+      expect(input.checkValidity()).toBe(true)
+    })
   })
 
   describe('input[type=number]', function () {
@@ -253,7 +314,7 @@ describe('HTML5 validation', function () {
     it('should be invalid if filled with a decimal number', function () {
       input.value = '1.23'
 
-      expect(input.validity.typeMismatch).toBe(true)
+      expect(input.validity.stepMismatch).toBe(true)
       expect(input.validity.valid).toBe(false)
       expect(input.checkValidity()).toBe(false)
     })
@@ -264,7 +325,7 @@ describe('HTML5 validation', function () {
     })
 
     it('should be valid if not empty and not required', function () {
-      input.value = 'foo'
+      input.value = '123'
 
       expect(isValid(input.validity)).toBe(true)
       expect(input.checkValidity()).toBe(true)
@@ -272,7 +333,7 @@ describe('HTML5 validation', function () {
 
     it('should be valid if not empty and required', function () {
       input.setAttribute('required', '')
-      input.value = 'foo'
+      input.value = '123'
 
       expect(isValid(input.validity)).toBe(true)
       expect(input.checkValidity()).toBe(true)
@@ -342,11 +403,6 @@ describe('HTML5 validation', function () {
       expect(isValid(input.validity)).toBe(true)
       expect(input.checkValidity()).toBe(true)
     })
-
-    it('should be invalid if empty', function () {
-      expect(input.validity.valid).toBe(false)
-      expect(input.checkValidity()).toBe(false)
-    })
   })
 
   describe('input[type=email]', function () {
@@ -354,7 +410,7 @@ describe('HTML5 validation', function () {
 
     beforeEach(function () {
       input = document.createElement('input')
-      input.setAttribute('type', 'number')
+      input.setAttribute('type', 'email')
     })
 
     it('should be valid if filled with a correct email address', function () {
@@ -422,7 +478,7 @@ describe('HTML5 validation', function () {
 
     it('should be valid if not empty and required', function () {
       input.setAttribute('required', '')
-      input.value = 'foo'
+      input.value = 'foo123'
 
       expect(isValid(input.validity)).toBe(true)
       expect(input.checkValidity()).toBe(true)
@@ -434,6 +490,62 @@ describe('HTML5 validation', function () {
       expect(input.validity.valueMissing).toBe(true)
       expect(input.validity.valid).toBe(false)
       expect(input.checkValidity()).toBe(false)
+    })
+
+    it('should be valid if disabled', function () {
+      input.setAttribute('required', '')
+      input.setAttribute('disabled', '')
+
+      expect(isValid(input.validity)).toBe(true)
+      expect(input.checkValidity()).toBe(true)
+    })
+
+    it('should be valid if value matches [pattern]', function () {
+      input.setAttribute('pattern', '[a-z]{1,3}%')
+      input.value = 'abc%'
+
+      expect(isValid(input.validity)).toBe(true)
+      expect(input.checkValidity()).toBe(true)
+    })
+
+    it('should be valid if value doesn\'t match [pattern]', function () {
+      input.setAttribute('pattern', '[a-z]{1,3}%')
+      input.value = '123456'
+
+      expect(isValid(input.validity)).toBe(true)
+      expect(input.checkValidity()).toBe(true)
+    })
+
+    it('should be valid if value length is lower than maxlength', function () {
+      input.setAttribute('maxlength', '2')
+
+      expect(isValid(input.validity)).toBe(true)
+      expect(input.checkValidity()).toBe(true)
+    })
+
+    it('should be invalid if value length is greater than maxlength', function () {
+      input.setAttribute('maxlength', '2')
+      input.value = 'abc'
+
+      expect(input.validity.tooLong).toBe(true)
+      expect(input.validity.valid).toBe(false)
+      expect(input.checkValidity()).toBe(false)
+    })
+
+    it('should be valid when filled with a number that is greater than max', function () {
+      input.setAttribute('max', '2')
+      input.value = '10'
+
+      expect(isValid(input.validity)).toBe(true)
+      expect(input.checkValidity()).toBe(true)
+    })
+
+    it('should be valid when filled with a number that is lower than minlength', function () {
+      input.setAttribute('min', '2')
+      input.value = '0'
+
+      expect(isValid(input.validity)).toBe(true)
+      expect(input.checkValidity()).toBe(true)
     })
   })
 
