@@ -13,6 +13,7 @@
     "lint": "standard",
     "pretest": "npm run lint",
     "test": "karma start --single-run",
+    "prebuild": "npm run test",
     "build": "webpack && webpack -p -d"
   },
   "repository": {
