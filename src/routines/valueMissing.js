@@ -1,18 +1,9 @@
 module.exports = function (input) {
-  var retVal = false
-  switch (input.getAttribute('type') || input.nodeName.toLowerCase()) {
-    case 'checkbox':
-      retVal = !input.checked
-      break
-    case 'radio':
-    case 'range':
-      break
-    case 'select':
-      retVal = !input[input.selectedIndex + 1].getAttribute('value')
-      break
-    default:
-      retVal = (input.value === '')
-      break
-  }
-  return retVal
+  const type = input.getAttribute('type') || input.tagName.toLowerCase()
+
+  if (type === 'checkbox') return input.checked !== true
+  if (type === 'select') return !input[input.selectedIndex + 1].getAttribute('value')
+  if (type !== 'radio' && type !== 'range') return input.value.length === 0
+
+  return false
 }

@@ -52,12 +52,12 @@
 	  customError: __webpack_require__(1),
 	  badInput: __webpack_require__(2),
 	  typeMismatch: __webpack_require__(3),
-	  rangeUnderflow: __webpack_require__(5),
-	  rangeOverflow: __webpack_require__(6),
-	  stepMismatch: __webpack_require__(7),
-	  tooLong: __webpack_require__(8),
-	  patternMismatch: __webpack_require__(9),
-	  valueMissing: __webpack_require__(4)
+	  rangeUnderflow: __webpack_require__(4),
+	  rangeOverflow: __webpack_require__(5),
+	  stepMismatch: __webpack_require__(6),
+	  tooLong: __webpack_require__(7),
+	  patternMismatch: __webpack_require__(8),
+	  valueMissing: __webpack_require__(9)
 	};[HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement].forEach(function (constructor) {
 	  Object.defineProperty(constructor.prototype, 'validity', {
 	    get: function get() {
@@ -122,11 +122,9 @@
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
-
-	var valueMissing = __webpack_require__(4);
 
 	// http://stackoverflow.com/questions/13289810/javascript-limit-text-field-to-positive-and-negative-numbers
 	var numberRegExp = /^-?\d+$/;
@@ -138,12 +136,12 @@
 	var urlRegExp = /(http(?:s)?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(?:\/?|(?:\/[\w\-]+)*)(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)$/;
 
 	module.exports = function (input) {
-	  if (valueMissing(input) === true) return true;
-
 	  var value = input.value;
 	  var type = input.getAttribute('type');
 
-	  if (type === 'number') return !numberRegExp.test(Number(value));else if (type === 'url') return !urlRegExp.test(value);else if (type === 'email') return !emailRegExp.test(value);
+	  if (type === 'number') return !numberRegExp.test(value);
+	  if (type === 'url') return !urlRegExp.test(value);
+	  if (type === 'email') return !emailRegExp.test(value);
 
 	  return false;
 	};
@@ -155,22 +153,12 @@
 	'use strict';
 
 	module.exports = function (input) {
-	  var retVal = false;
-	  switch (input.getAttribute('type') || input.nodeName.toLowerCase()) {
-	    case 'checkbox':
-	      retVal = !input.checked;
-	      break;
-	    case 'radio':
-	    case 'range':
-	      break;
-	    case 'select':
-	      retVal = !input[input.selectedIndex + 1].getAttribute('value');
-	      break;
-	    default:
-	      retVal = input.value === '';
-	      break;
-	  }
-	  return retVal;
+	  if (!input.hasAttribute('min')) return false;
+
+	  var value = Number(input.value);
+	  var min = Number(input.getAttribute('min'));
+
+	  return value < min;
 	};
 
 /***/ },
@@ -180,7 +168,12 @@
 	'use strict';
 
 	module.exports = function (input) {
-	  return !!input.getAttribute('min') && Number(input.value) < Number(input.getAttribute('min'));
+	  if (!input.hasAttribute('max')) return false;
+
+	  var value = Number(input.value);
+	  var max = Number(input.getAttribute('max'));
+
+	  return value > max;
 	};
 
 /***/ },
@@ -190,7 +183,12 @@
 	'use strict';
 
 	module.exports = function (input) {
-	  return !!input.getAttribute('max') && Number(input.value) > Number(input.getAttribute('max'));
+	  if (!input.hasAttribute('step')) return false;
+
+	  var value = Number(input.value);
+	  var step = Number(input.getAttribute('step'));
+
+	  return value % step !== 0;
 	};
 
 /***/ },
@@ -200,7 +198,11 @@
 	'use strict';
 
 	module.exports = function (input) {
-	  return !!input.getAttribute('step') && input.value % Number(input.getAttribute('step')) !== 0;
+	  if (!input.hasAttribute('maxlength')) return false;
+
+	  var maxlength = Number(input.getAttribute('maxlength'));
+
+	  return input.value.length > maxlength;
 	};
 
 /***/ },
@@ -210,7 +212,12 @@
 	'use strict';
 
 	module.exports = function (input) {
-	  return !!input.getAttribute('maxlength') && input.value.length > Number(input.getAttribute('maxlength'));
+	  if (!input.hasAttribute('pattern')) return false;
+
+	  var pattern = input.getAttribute('pattern');
+	  var regexp = new RegExp(pattern);
+
+	  return regexp.test(input.value) === false;
 	};
 
 /***/ },
@@ -220,7 +227,13 @@
 	'use strict';
 
 	module.exports = function (input) {
-	  return input.getAttribute('pattern') && new RegExp(input.getAttribute('pattern')).test(input.value) === false;
+	  var type = input.getAttribute('type') || input.tagName.toLowerCase();
+
+	  if (type === 'checkbox') return input.checked !== true;
+	  if (type === 'select') return !input[input.selectedIndex + 1].getAttribute('value');
+	  if (type !== 'radio' && type !== 'range') return input.value.length === 0;
+
+	  return false;
 	};
 
 /***/ }

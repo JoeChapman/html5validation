@@ -1,3 +1,8 @@
 module.exports = function (input) {
-  return !!input.getAttribute('min') && Number(input.value) < Number(input.getAttribute('min'))
+  if (!input.hasAttribute('min')) return false
+
+  const value = Number(input.value)
+  const min = Number(input.getAttribute('min'))
+
+  return value < min
 }

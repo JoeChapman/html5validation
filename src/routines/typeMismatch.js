@@ -1,5 +1,3 @@
-const valueMissing = require('./valueMissing')
-
 // http://stackoverflow.com/questions/13289810/javascript-limit-text-field-to-positive-and-negative-numbers
 const numberRegExp = /^-?\d+$/
 
@@ -10,14 +8,12 @@ const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9
 const urlRegExp = /(http(?:s)?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(?:\/?|(?:\/[\w\-]+)*)(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)$/
 
 module.exports = function (input) {
-  if (valueMissing(input) === true) return true
-
   const value = input.value
   const type = input.getAttribute('type')
 
-  if (type === 'number') return !numberRegExp.test(Number(value))
-  else if (type === 'url') return !urlRegExp.test(value)
-  else if (type === 'email') return !emailRegExp.test(value)
+  if (type === 'number') return !numberRegExp.test(value)
+  if (type === 'url') return !urlRegExp.test(value)
+  if (type === 'email') return !emailRegExp.test(value)
 
   return false
 }

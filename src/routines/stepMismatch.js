@@ -1,3 +1,8 @@
 module.exports = function (input) {
-  return !!input.getAttribute('step') && (input.value % Number(input.getAttribute('step')) !== 0)
+  if (!input.hasAttribute('step')) return false
+
+  const value = Number(input.value)
+  const step = Number(input.getAttribute('step'))
+
+  return value % step !== 0
 }

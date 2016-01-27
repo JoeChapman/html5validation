@@ -1,3 +1,8 @@
 module.exports = function (input) {
-  return !!input.getAttribute('max') && Number(input.value) > Number(input.getAttribute('max'))
+  if (!input.hasAttribute('max')) return false
+
+  const value = Number(input.value)
+  const max = Number(input.getAttribute('max'))
+
+  return value > max
 }

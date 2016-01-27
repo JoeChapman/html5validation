@@ -1,3 +1,7 @@
 module.exports = function (input) {
-  return !!input.getAttribute('maxlength') && input.value.length > Number(input.getAttribute('maxlength'))
+  if (!input.hasAttribute('maxlength')) return false
+
+  const maxlength = Number(input.getAttribute('maxlength'))
+
+  return input.value.length > maxlength
 }
