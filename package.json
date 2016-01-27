@@ -9,6 +9,12 @@
     "Shim"
   ],
   "main": "dist/html5validation.js",
+  "files": [
+    "dist",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
   "scripts": {
     "lint": "standard",
     "pretest": "npm run lint",
