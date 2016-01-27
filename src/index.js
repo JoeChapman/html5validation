@@ -44,12 +44,5 @@ const routines = {
       return isValid
     }
 
-    constructor.prototype.setCustomValidity = function (message) {
-      // validationMessage is readonly
-      // by deleting it first it can be re-defined.
-      delete this.validationMessage
-      this.validationMessage = message
-    }
-
     constructor.prototype.willValidate = true
   })

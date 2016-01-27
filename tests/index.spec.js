@@ -552,20 +552,4 @@ describe('HTML5 validation', function () {
   describe('checkValidity', function () {
     it('should emit an event when called')
   })
-
-  describe('setCustomValidity', function () {
-    let input
-
-    beforeEach(function () {
-      input = document.createElement('input')
-    })
-
-    it('should set input.validationMessage property', function () {
-      const customMessage = 'This is a custom validation message'
-
-      expect(input.validationMessage).not.toBe(customMessage)
-      input.setCustomValidity(customMessage)
-      expect(input.validationMessage).toBe(customMessage)
-    })
-  })
 })
