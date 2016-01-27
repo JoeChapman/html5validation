@@ -46,52 +46,64 @@
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 	/* global HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement */
 
-	var routines = {
-	  customError: __webpack_require__(1),
-	  badInput: __webpack_require__(2),
-	  typeMismatch: __webpack_require__(3),
-	  rangeUnderflow: __webpack_require__(4),
-	  rangeOverflow: __webpack_require__(5),
-	  stepMismatch: __webpack_require__(6),
-	  tooLong: __webpack_require__(7),
-	  patternMismatch: __webpack_require__(8),
-	  valueMissing: __webpack_require__(9)
-	};[HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement].forEach(function (constructor) {
-	  Object.defineProperty(constructor.prototype, 'validity', {
-	    get: function get() {
-	      var validity = { valid: true };
+	var isSupported = function () {
+	  var input = document.createElement('input');
 
-	      for (var name in routines) {
-	        if (!routines.hasOwnProperty(name)) continue;
+	  return input.willValidate === true && typeof input.checkValidity === 'function' && _typeof(input.validity) === 'object';
+	}();
 
-	        validity[name] = routines[name](this);
-	        if (validity[name] === true) validity.valid = false;
-	      }
+	if (isSupported === false) {
+	  (function () {
+	    var routines = {
+	      customError: __webpack_require__(1),
+	      badInput: __webpack_require__(2),
+	      typeMismatch: __webpack_require__(3),
+	      rangeUnderflow: __webpack_require__(4),
+	      rangeOverflow: __webpack_require__(5),
+	      stepMismatch: __webpack_require__(6),
+	      tooLong: __webpack_require__(7),
+	      patternMismatch: __webpack_require__(8),
+	      valueMissing: __webpack_require__(9)
+	    };[HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement].forEach(function (constructor) {
+	      Object.defineProperty(constructor.prototype, 'validity', {
+	        get: function get() {
+	          var validity = { valid: true };
+	          console.log('hey there');
+	          for (var name in routines) {
+	            if (!routines.hasOwnProperty(name)) continue;
 
-	      return validity;
-	    },
+	            validity[name] = routines[name](this);
+	            if (validity[name] === true) validity.valid = false;
+	          }
 
-	    configurable: true
-	  });
+	          return validity;
+	        },
 
-	  constructor.prototype.checkValidity = function () {
-	    var isValid = this.validity.valid;
+	        configurable: true
+	      });
 
-	    if (!isValid) {
-	      // Old-fashioned way to create events
-	      // the new way is still not supported by IE
-	      var event = document.createEvent('Event');
-	      event.initEvent('invalid', true, true);
-	      this.dispatchEvent(event);
-	    }
+	      constructor.prototype.checkValidity = function () {
+	        var isValid = this.validity.valid;
 
-	    return isValid;
-	  };
+	        if (!isValid) {
+	          // Old-fashioned way to create events
+	          // the new way is still not supported by IE
+	          var event = document.createEvent('Event');
+	          event.initEvent('invalid', true, true);
+	          this.dispatchEvent(event);
+	        }
 
-	  constructor.prototype.willValidate = true;
-	});
+	        return isValid;
+	      };
+
+	      constructor.prototype.willValidate = true;
+	    });
+	  })();
+	}
 
 /***/ },
 /* 1 */
