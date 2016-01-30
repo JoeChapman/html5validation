@@ -210,6 +210,7 @@
 
 	module.exports = function (input) {
 	  if (!input.hasAttribute('maxlength')) return false;
+	  if (input.getAttribute('type') === 'number') return false;
 
 	  var maxlength = Number(input.getAttribute('maxlength'));
 

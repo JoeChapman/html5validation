@@ -28,4 +28,19 @@ describe('tooLong', function () {
       })
     })
   })
+
+  describe('input[type=number]', function () {
+    let input
+
+    beforeEach(function () {
+      input = document.createElement('input')
+      input.setAttribute('type', 'number')
+    })
+
+    it('should be valid if value length is greater than maxlength', function () {
+      input.value = '123456'
+      input.setAttribute('maxlength', '2')
+      expect(tooLong(input)).toBe(false)
+    })
+  })
 })
