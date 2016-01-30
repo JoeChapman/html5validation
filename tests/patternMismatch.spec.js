@@ -3,7 +3,7 @@
 describe('patternMismatch', function () {
   const patternMismatch = require('../src/routines/patternMismatch')
 
-  ;['text', 'tel', 'textarea'].forEach(function (type) {
+  ;['text', 'tel', 'email', 'textarea'].forEach(function (type) {
     describe(`input[type=${type}]`, function () {
       let input
 
