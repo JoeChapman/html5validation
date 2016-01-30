@@ -163,6 +163,7 @@
 
 	module.exports = function (input) {
 	  if (!input.hasAttribute('min')) return false;
+	  if (input.getAttribute('type') !== 'number') return false;
 
 	  var value = Number(input.value);
 	  var min = Number(input.getAttribute('min'));
@@ -178,6 +179,7 @@
 
 	module.exports = function (input) {
 	  if (!input.hasAttribute('max')) return false;
+	  if (input.getAttribute('type') !== 'number') return false;
 
 	  var value = Number(input.value);
 	  var max = Number(input.getAttribute('max'));
@@ -236,6 +238,8 @@
 	'use strict';
 
 	module.exports = function (input) {
+	  if (!input.hasAttribute('required')) return false;
+
 	  var type = input.getAttribute('type') || input.tagName.toLowerCase();
 
 	  if (type === 'checkbox') return input.checked !== true;

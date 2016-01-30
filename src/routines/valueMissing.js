@@ -1,4 +1,6 @@
 module.exports = function (input) {
+  if (!input.hasAttribute('required')) return false
+
   const type = input.getAttribute('type') || input.tagName.toLowerCase()
 
   if (type === 'checkbox') return input.checked !== true
