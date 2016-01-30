@@ -3,7 +3,7 @@
 describe('tooLong', function () {
   const tooLong = require('../src/routines/tooLong')
 
-  ;['text', 'tel', 'email', 'textarea'].forEach(function (type) {
+  ;['text', 'tel', 'email', 'url', 'textarea'].forEach(function (type) {
     describe(`input[type=${type}]`, function () {
       let input
 

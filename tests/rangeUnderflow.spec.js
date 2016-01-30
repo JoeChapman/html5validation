@@ -3,7 +3,7 @@
 describe('rangeUnderflow', function () {
   const rangeUnderflow = require('../src/routines/rangeUnderflow')
 
-  ;['text', 'tel', 'email', 'textarea'].forEach(function (type) {
+  ;['text', 'tel', 'email', 'url', 'textarea'].forEach(function (type) {
     describe(`input[type=${type}]`, function () {
       let input
 

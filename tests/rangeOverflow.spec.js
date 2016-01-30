@@ -3,7 +3,7 @@
 describe('rangeOverflow', function () {
   const rangeOverflow = require('../src/routines/rangeOverflow')
 
-  ;['text', 'tel', 'email', 'textarea'].forEach(function (type) {
+  ;['text', 'tel', 'email', 'url', 'textarea'].forEach(function (type) {
     describe(`input[type=${type}]`, function () {
       let input
 

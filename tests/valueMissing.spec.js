@@ -3,7 +3,7 @@
 describe('valueMissing', function () {
   const valueMissing = require('../src/routines/valueMissing')
 
-  ;['text', 'tel', 'number', 'email', 'textarea'].forEach(function (type) {
+  ;['text', 'tel', 'number', 'email', 'url', 'textarea'].forEach(function (type) {
     describe(`input[type=${type}]`, function () {
       let input
 
