@@ -196,6 +196,9 @@
 	module.exports = function (input) {
 	  if (!input.hasAttribute('step')) return false;
 
+	  var type = input.getAttribute('type');
+	  if (['number', 'range'].indexOf(type) === -1) return false;
+
 	  var value = Number(input.value);
 	  var step = Number(input.getAttribute('step'));
 
