@@ -4,19 +4,13 @@ HTML5 ValidityState shim
 
 ## TODO
 
-* [ ] Add missing tests
-  * [ ] `input[type=number]`
-    * [ ] maxlength
-    * [ ] minlength
-  * [ ] `input[type=email]`
-    * [ ] required
-    * [ ] maxlength
-    * [ ] minlength
-  * [ ] `input[type=url]`
-    * [ ] required
-    * [ ] maxlength
-    * [ ] minlength
-  * [ ] `[step]`
-  * [ ] `<select>`
-  * [x] `<textarea>`
-  * [ ] `<checkValidity>`
+* [ ] Read specs and add implementation details regarding disabled inputs (looks like they are always considered valid).
+* [ ] Add support for badInput
+* [ ] Add support for other HTML5 inputs:
+  * [ ] range
+  * [ ] date
+  * [ ] datetime
+  * [ ] datetime-local
+  * [ ] month
+  * [ ] time
+  * [ ] week
