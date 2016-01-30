@@ -95,4 +95,33 @@ describe('valueMissing', function () {
       expect(valueMissing(input)).toBe(false)
     })
   })
+
+  describe('select', function () {
+    let input
+
+    beforeEach(function () {
+      input = document.createElement('select')
+
+      ;['', 'foo', 'bar'].forEach(function (value) {
+        const option = document.createElement('option')
+        option.value = value
+        input.appendChild(option)
+      })
+    })
+
+    it('should be valid if no option are selected and it is not required', function () {
+      expect(valueMissing(input)).toBe(false)
+    })
+
+    it('should be valid if an option is selected and it is required', function () {
+      input.setAttribute('required', '')
+      input.selectedIndex = 1
+      expect(valueMissing(input)).toBe(false)
+    })
+
+    it('should be invalid if no option are selected and it is required', function () {
+      input.setAttribute('required', '')
+      expect(valueMissing(input)).toBe(true)
+    })
+  })
 })
