@@ -46,7 +46,7 @@
 
 	'use strict';
 
-	/* global HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement */
+	/* global HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement, HTMLFormElement */
 
 	var routines = {
 	  customError: __webpack_require__(1),
@@ -108,6 +108,22 @@
 	    };
 	  }
 	});
+
+	if (!('checkValidity' in HTMLFormElement)) {
+	  HTMLFormElement.prototype.checkValidity = function () {
+	    var form = this;
+
+	    function $$(selector) {
+	      return [].slice.call(form.querySelectorAll(selector));
+	    }
+
+	    return $$('input').filter(function (input) {
+	      return ['button', 'submit', 'reset'].indexOf(input.getAttribute('type')) === -1;
+	    }).concat($$('textarea, select')).every(function (input) {
+	      return input.validity.valid === true;
+	    });
+	  };
+	}
 
 /***/ },
 /* 1 */

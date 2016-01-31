@@ -1,4 +1,4 @@
-/* global HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement */
+/* global HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement, HTMLFormElement */
 
 const routines = {
   customError: require('./routines/customError'),
@@ -62,3 +62,18 @@ const routines = {
       }
     }
   })
+
+if (!('checkValidity' in HTMLFormElement)) {
+  HTMLFormElement.prototype.checkValidity = function () {
+    const form = this
+
+    function $$ (selector) {
+      return [].slice.call(form.querySelectorAll(selector))
+    }
+
+    return $$('input')
+      .filter((input) => ['button', 'submit', 'reset'].indexOf(input.getAttribute('type')) === -1)
+      .concat($$('textarea, select'))
+      .every((input) => input.validity.valid === true)
+  }
+}
