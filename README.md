@@ -1,24 +1,16 @@
-HTML5 Validation
-================
+# HTML5 Validation
 
-Cross browser support for HTML5 ValidityState
+HTML5 ValidityState shim
 
-Read <pre>input.validity.valid</pre> or execute <pre>input.checkValidity()</pre>
-to get the validity state.
+## TODO
 
-### Usage
-
-Either
-```html
-<script src='path/to/index.js'>
-```
-or with Browserify
-```js
-require('html5validation');
-```
-
-### Tests
-
-```
-$ npm test
-```
+* [ ] Read specs and add implementation details regarding disabled inputs (looks like they are always considered valid).
+* [ ] Add support for badInput
+* [ ] Add support for other HTML5 inputs:
+  * [ ] range
+  * [ ] date
+  * [ ] datetime
+  * [ ] datetime-local
+  * [ ] month
+  * [ ] time
+  * [ ] week
