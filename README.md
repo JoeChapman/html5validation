@@ -1,5 +1,7 @@
 # HTML5 Validation
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/JoeChapman/html5validation.svg)](https://greenkeeper.io/)
+
 HTML5 ValidityState shim
 
 ## TODO
